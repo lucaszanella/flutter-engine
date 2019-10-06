@@ -908,6 +908,21 @@ int64_t FlutterDesktopRegisterExternalTexture(
   return -1;
 }
 
+int64_t FlutterDesktopRegisterExternalTexture(
+    FlutterDesktopTextureRegistrarRef texture_registrar,
+    FlutterTexutreRendererCallback texture_renderer_callback,
+    void* user_data) {
+  std::unique_ptr<flutter::ExternalTextureGL> texture_gl(
+      new flutter::ExternalTextureGL(texture_renderer_callback, user_data));
+  int64_t texture_id = texture_gl->texture_id();
+  texture_registrar->textures[texture_id] = std::move(texture_gl);
+  if (FlutterEngineRegisterExternalTexture(texture_registrar->engine,
+                                           texture_id) == kSuccess) {
+    return texture_id;
+  }
+  return -1;
+}
+
 bool FlutterDesktopUnregisterExternalTexture(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     int64_t texture_id) {

@@ -23,6 +23,15 @@ class Texture {
   virtual const PixelBuffer* CopyPixelBuffer(size_t width, size_t height) = 0;
 };
 
+// An external texture render interface declaration.
+class TextureRenderer {
+ public:
+  virtual ~TextureRenderer() {}
+  // This function renders to the shell's texture
+  virtual void renderToTexture(size_t width, size_t height) = 0;
+};
+
+
 class TextureRegistrar {
  public:
   virtual ~TextureRegistrar() {}
@@ -31,6 +40,8 @@ class TextureRegistrar {
    * Registers a |texture| object and return textureId.
    */
   virtual int64_t RegisterTexture(Texture* texture) = 0;
+
+  virtual int64_t RegisterTextureRenderer(TextureRenderer* texture_renderer) = 0;
 
   /**
    * Mark a texture buffer is ready.
