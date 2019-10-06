@@ -178,21 +178,21 @@ class TextureRegistrarImpl : public TextureRegistrar {
 
 // Wrapper around a FlutterDesktopTextureRegistrarRef that implements the
 // TextureRegistrar API.
-class TextureRegistrarImpl : public TextureRendererRegistrar {
+class TextureRendererRegistrarImpl : public TextureRendererRegistrar {
  public:
-  explicit TextureRegistrarImpl(
+  explicit TextureRendererRegistrarImpl(
       FlutterDesktopTextureRegistrarRef texture_registrar_ref)
       : texture_registrar_ref_(texture_registrar_ref) {}
 
-  virtual ~TextureRegistrarImpl() = default;
+  virtual ~TextureRendererRegistrarImpl() = default;
 
   // Prevent copying.
-  TextureRegistrarImpl(TextureRegistrarImpl const&) = delete;
-  TextureRegistrarImpl& operator=(TextureRegistrarImpl const&) = delete;
+  TextureRendererRegistrarImpl(TextureRendererRegistrarImpl const&) = delete;
+  TextureRendererRegistrarImpl& operator=(TextureRendererRegistrarImpl const&) = delete;
 
   virtual int64_t RegisterTextureRenderer(TextureRenderer* texture_renderer) override {
     FlutterTexutreRendererCallback callback =
-        [](size_t width, size_t height, void* user_data) -> const PixelBuffer* {
+        [](size_t width, size_t height, void* user_data) {
           ((TextureRenderer*)user_data)->renderToTexture(width, height);
     };
     int64_t texture_id = FlutterDesktopRegisterExternalTextureRenderer(
