@@ -162,6 +162,15 @@ class TextureRegistrarImpl : public TextureRegistrar {
     return texture_id;
   }
 
+  virtual int64_t RegisterTextureRenderer(TextureRenderer* texture_renderer) override {
+    FlutterTexutreCallback callback =
+        [](size_t width, size_t height, void* user_data) -> const PixelBuffer* {
+          ((TextureRenderer*)user_data)->renderToTexture(width, height);
+    };
+    int64_t texture_id = FlutterDesktopRegisterExternalTexture(
+        texture_registrar_ref_, callback, texture_renderer);
+    return texture_id;
+  }
   virtual void MarkTextureFrameAvailable(int64_t texture_id) override {
     FlutterDesktopMarkExternalTextureFrameAvailable(texture_registrar_ref_,
                                                     texture_id);
