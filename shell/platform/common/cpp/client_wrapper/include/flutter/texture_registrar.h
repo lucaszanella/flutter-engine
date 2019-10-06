@@ -41,8 +41,6 @@ class TextureRegistrar {
    */
   virtual int64_t RegisterTexture(Texture* texture) = 0;
 
-  virtual int64_t RegisterTextureRenderer(TextureRenderer* texture_renderer) = 0;
-
   /**
    * Mark a texture buffer is ready.
    */
@@ -52,6 +50,26 @@ class TextureRegistrar {
    * Unregisters an existing Texture object.
    */
   virtual void UnregisterTexture(int64_t texture_id) = 0;
+  
+};
+
+class TextureRendererRegistrar {
+ public:
+  virtual ~TextureRendererRegistrar() {}
+
+
+  virtual int64_t RegisterTextureRenderer(TextureRenderer* texture_renderer) = 0;
+
+  /**
+   * Mark a texture buffer is ready.
+   */
+  virtual void MarkTextureFrameAvailable(int64_t texture_id) = 0;
+
+  /**
+   * Unregisters an existing Texture object.
+   */  
+  virtual void UnregisterTextureRenderer(int64_t texture_id) = 0;
+
 };
 
 }  // namespace flutter

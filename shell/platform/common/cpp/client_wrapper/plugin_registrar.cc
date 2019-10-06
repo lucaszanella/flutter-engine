@@ -162,15 +162,6 @@ class TextureRegistrarImpl : public TextureRegistrar {
     return texture_id;
   }
 
-  virtual int64_t RegisterTextureRenderer(TextureRenderer* texture_renderer) override {
-    FlutterTexutreCallback callback =
-        [](size_t width, size_t height, void* user_data) -> const PixelBuffer* {
-          ((TextureRenderer*)user_data)->renderToTexture(width, height);
-    };
-    int64_t texture_id = FlutterDesktopRegisterExternalTexture(
-        texture_registrar_ref_, callback, texture_renderer);
-    return texture_id;
-  }
   virtual void MarkTextureFrameAvailable(int64_t texture_id) override {
     FlutterDesktopMarkExternalTextureFrameAvailable(texture_registrar_ref_,
                                                     texture_id);
@@ -178,6 +169,44 @@ class TextureRegistrarImpl : public TextureRegistrar {
 
   virtual void UnregisterTexture(int64_t texture_id) override {
     FlutterDesktopUnregisterExternalTexture(texture_registrar_ref_, texture_id);
+  }
+
+ private:
+  // Handle for interacting with the C API.
+  FlutterDesktopTextureRegistrarRef texture_registrar_ref_;
+};
+
+// Wrapper around a FlutterDesktopTextureRegistrarRef that implements the
+// TextureRegistrar API.
+class TextureRegistrarImpl : public TextureRendererRegistrar {
+ public:
+  explicit TextureRegistrarImpl(
+      FlutterDesktopTextureRegistrarRef texture_registrar_ref)
+      : texture_registrar_ref_(texture_registrar_ref) {}
+
+  virtual ~TextureRegistrarImpl() = default;
+
+  // Prevent copying.
+  TextureRegistrarImpl(TextureRegistrarImpl const&) = delete;
+  TextureRegistrarImpl& operator=(TextureRegistrarImpl const&) = delete;
+
+  virtual int64_t RegisterTextureRenderer(TextureRenderer* texture_renderer) override {
+    FlutterTexutreRendererCallback callback =
+        [](size_t width, size_t height, void* user_data) -> const PixelBuffer* {
+          ((TextureRenderer*)user_data)->renderToTexture(width, height);
+    };
+    int64_t texture_id = FlutterDesktopRegisterExternalTextureRenderer(
+        texture_registrar_ref_, callback, texture_renderer);
+    return texture_id;
+  }
+  
+  virtual void MarkTextureFrameAvailable(int64_t texture_id) override {
+    FlutterDesktopMarkExternalTextureFrameAvailable(texture_registrar_ref_,
+                                                    texture_id);
+  }
+
+  virtual void UnregisterTextureRenderer(int64_t texture_id) override {
+    FlutterDesktopUnregisterExternalTextureRenderer(texture_registrar_ref_, texture_id);
   }
 
  private:

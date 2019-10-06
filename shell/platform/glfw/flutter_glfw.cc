@@ -908,7 +908,7 @@ int64_t FlutterDesktopRegisterExternalTexture(
   return -1;
 }
 
-int64_t FlutterDesktopRegisterExternalTexture(
+int64_t FlutterDesktopRegisterExternalTextureRenderer(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     FlutterTexutreRendererCallback texture_renderer_callback,
     void* user_data) {
@@ -924,6 +924,16 @@ int64_t FlutterDesktopRegisterExternalTexture(
 }
 
 bool FlutterDesktopUnregisterExternalTexture(
+    FlutterDesktopTextureRegistrarRef texture_registrar,
+    int64_t texture_id) {
+  auto it = texture_registrar->textures.find(texture_id);
+  if (it != texture_registrar->textures.end())
+    texture_registrar->textures.erase(it);
+  return (FlutterEngineUnregisterExternalTexture(texture_registrar->engine,
+                                                 texture_id) == kSuccess);
+}
+
+bool FlutterDesktopUnregisterExternalTextureRenderer(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     int64_t texture_id) {
   auto it = texture_registrar->textures.find(texture_id);
