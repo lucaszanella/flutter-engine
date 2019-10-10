@@ -36,6 +36,7 @@ typedef const PixelBuffer* (*FlutterTexutreCallback)(size_t width,
 // the flutter engine to copy the texture.
 typedef void (*FlutterTexutreRendererCallback)(size_t width,
                                        size_t height,
+                                       unsigned int texture_id,
                                        void* user_data);
 
 // Register an new texture to the flutter engine and return the texture id,

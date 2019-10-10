@@ -28,7 +28,7 @@ class TextureRenderer {
  public:
   virtual ~TextureRenderer() {}
   // This function renders to the shell's texture
-  virtual void renderToTexture(size_t width, size_t height) = 0;
+  virtual void renderToTexture(size_t width, size_t height, unsigned int texture_id) = 0;
 };
 
 

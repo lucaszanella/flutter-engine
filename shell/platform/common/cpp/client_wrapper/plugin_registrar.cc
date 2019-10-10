@@ -192,8 +192,8 @@ class TextureRendererRegistrarImpl : public TextureRendererRegistrar {
 
   virtual int64_t RegisterTextureRenderer(TextureRenderer* texture_renderer) override {
     FlutterTexutreRendererCallback callback =
-        [](size_t width, size_t height, void* user_data) {
-          ((TextureRenderer*)user_data)->renderToTexture(width, height);
+        [](size_t width, size_t height, unsigned int texture_id, void* user_data) {
+          ((TextureRenderer*)user_data)->renderToTexture(width, height, texture_id);
     };
     int64_t texture_id = FlutterDesktopRegisterExternalTextureRenderer(
         texture_registrar_ref_, callback, texture_renderer);
