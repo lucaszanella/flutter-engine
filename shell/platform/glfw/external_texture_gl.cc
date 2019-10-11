@@ -5,7 +5,7 @@
 #include "flutter/shell/platform/glfw/external_texture_gl.h"
 
 #include <glad/gl.h>
-
+#include <iostream>
 // glad.h must be included before glfw3.h.
 #include <GLFW/glfw3.h>
 
@@ -63,6 +63,8 @@ bool ExternalTextureGL::PopulateTextureWithIdentifier(
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   }
   if (texture_callback_) {
+    std::cout << "using texture_callback_" << std::endl;
+
     const PixelBuffer* pixel_buffer =
         texture_callback_(width, height, user_data_);
 
@@ -73,9 +75,15 @@ bool ExternalTextureGL::PopulateTextureWithIdentifier(
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pixel_buffer->width,
                  pixel_buffer->height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                  pixel_buffer->buffer);
+    std::cout << "did drawing" << std::endl;
+
   } else if (texture_renderer_callback_) {
+    std::cout << "using texture_renderer_callback_" << std::endl;
+
     glBindTexture(GL_TEXTURE_2D, state_->gl_texture);
     texture_renderer_callback_(width, height, state_->gl_texture, user_data_);
+  } else {
+    std::cout << "NO TEXTURE CALLBACK!" << std::endl;
   }
   opengl_texture->target = GL_TEXTURE_2D;
   opengl_texture->name = state_->gl_texture;

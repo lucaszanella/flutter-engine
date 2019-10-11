@@ -19,7 +19,7 @@ typedef struct ExternalTextureGLState ExternalTextureGLState;
 class ExternalTextureGL {
  public:
   ExternalTextureGL(FlutterTexutreCallback texture_callback, void* user_data);
-  ExternalTextureGL(FlutterTexutreRendererCallback texture_callback,void* user_data);
+  ExternalTextureGL(FlutterTexutreRendererCallback texture_callback, void* user_data);
 
   virtual ~ExternalTextureGL();
 

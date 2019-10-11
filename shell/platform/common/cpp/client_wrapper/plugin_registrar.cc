@@ -155,6 +155,7 @@ class TextureRegistrarImpl : public TextureRegistrar {
   virtual int64_t RegisterTexture(Texture* texture) override {
     int64_t texture_id = 0;
     if (texture->renderType == Texture::RenderType::CopyPixelBuffer) {
+      std::cout << "Texture::RenderType::CopyPixelBuffer" << std::endl;
       FlutterTexutreCallback callback =
           [](size_t width, size_t height,
              void* user_data) -> const PixelBuffer* {
@@ -163,13 +164,18 @@ class TextureRegistrarImpl : public TextureRegistrar {
       texture_id = FlutterDesktopRegisterExternalTexture(
           texture_registrar_ref_, callback, texture);
     } else if (texture->renderType == Texture::RenderType::RenderToTexture) {
+      std::cout << "Texture::RenderType::RenderToTexture" << std::endl;
       FlutterTexutreRendererCallback callback =
           [](size_t width, size_t height, int64_t texture_id,
              void* user_data)  {
+                std::cout << "texturerenderer callback def, userdata: " << user_data << std::endl;
         ((Texture*)user_data)->RenderToTexture(width, height, texture_id);
       };
+      std::cout << "texture passed is " << texture << std::endl;
       texture_id = FlutterDesktopRegisterExternalTextureRenderer(
           texture_registrar_ref_, callback, texture);
+    } else {
+      std::cout << "NO TEXTURE TYPE!!!" << std::endl;
     }
     return texture_id;
   }
