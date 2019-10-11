@@ -19,7 +19,6 @@ typedef struct ExternalTextureGLState ExternalTextureGLState;
 class ExternalTextureGL {
  public:
   ExternalTextureGL(FlutterTexutreCallback texture_callback, void* user_data);
-  ExternalTextureGL(FlutterTexutreRendererCallback texture_renderer_callback, void* user_data);
 
   virtual ~ExternalTextureGL();
 
@@ -42,7 +41,6 @@ class ExternalTextureGL {
  private:
   std::unique_ptr<ExternalTextureGLState> state_;
   FlutterTexutreCallback texture_callback_ = nullptr;
-  FlutterTexutreRendererCallback texture_renderer_callback_ = nullptr;
   void* user_data_ = nullptr;
 };
 

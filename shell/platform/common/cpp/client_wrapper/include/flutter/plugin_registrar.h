@@ -15,7 +15,6 @@
 #include "binary_messenger.h"
 #include "texture_registrar.h"
 
-
 namespace flutter {
 
 class Plugin;
@@ -45,9 +44,6 @@ class PluginRegistrar {
 
   TextureRegistrar* textures() { return textures_.get(); }
 
-  TextureRendererRegistrar* texture_renderers() { return texture_renderers_.get(); }
-
-
   // Takes ownership of |plugin|.
   //
   // Plugins are not required to call this method if they have other lifetime
@@ -68,8 +64,6 @@ class PluginRegistrar {
   std::unique_ptr<BinaryMessenger> messenger_;
 
   std::unique_ptr<TextureRegistrar> textures_;
-
-  std::unique_ptr<TextureRendererRegistrar> texture_renderers_;
 
   // Plugins registered for ownership.
   std::set<std::unique_ptr<Plugin>> plugins_;

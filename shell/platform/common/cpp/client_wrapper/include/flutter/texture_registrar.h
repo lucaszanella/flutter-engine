@@ -23,15 +23,6 @@ class Texture {
   virtual const PixelBuffer* CopyPixelBuffer(size_t width, size_t height) = 0;
 };
 
-// An external texture render interface declaration.
-class TextureRenderer {
- public:
-  virtual ~TextureRenderer() {}
-  // This function renders to the shell's texture
-  virtual void renderToTexture(size_t width, size_t height, unsigned int texture_id) = 0;
-};
-
-
 class TextureRegistrar {
  public:
   virtual ~TextureRegistrar() {}
@@ -50,26 +41,6 @@ class TextureRegistrar {
    * Unregisters an existing Texture object.
    */
   virtual void UnregisterTexture(int64_t texture_id) = 0;
-  
-};
-
-class TextureRendererRegistrar {
- public:
-  virtual ~TextureRendererRegistrar() {}
-
-
-  virtual int64_t RegisterTextureRenderer(TextureRenderer* texture_renderer) = 0;
-
-  /**
-   * Mark a texture buffer is ready.
-   */
-  virtual void MarkTextureFrameAvailable(int64_t texture_id) = 0;
-
-  /**
-   * Unregisters an existing Texture object.
-   */  
-  virtual void UnregisterTextureRenderer(int64_t texture_id) = 0;
-
 };
 
 }  // namespace flutter

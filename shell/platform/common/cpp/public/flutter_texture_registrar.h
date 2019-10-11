@@ -32,13 +32,6 @@ typedef const PixelBuffer* (*FlutterTexutreCallback)(size_t width,
                                                      size_t height,
                                                      void* user_data);
 
-// The pixel buffer copy callback definition is provided to
-// the flutter engine to copy the texture.
-typedef void (*FlutterTexutreRendererCallback)(size_t width,
-                                       size_t height,
-                                       unsigned int texture_id,
-                                       void* user_data);
-
 // Register an new texture to the flutter engine and return the texture id,
 // The engine will use the |texture_callback|
 // function to copy the pixel buffer from the plugin caller.
@@ -47,21 +40,8 @@ FLUTTER_EXPORT int64_t FlutterDesktopRegisterExternalTexture(
     FlutterTexutreCallback texture_callback,
     void* user_data);
 
-// Register an new texture to the flutter engine and return the texture id,
-// The engine will use the |texture_callback|
-// function to copy the pixel buffer from the plugin caller.
-FLUTTER_EXPORT int64_t FlutterDesktopRegisterExternalTextureRenderer(
-    FlutterDesktopTextureRegistrarRef texture_renderer_registrar,
-    FlutterTexutreRendererCallback texture_renderer_callback,
-    void* user_data);
-
 // Unregister an existing texture from the flutter engine for a |texture_id|.
 FLUTTER_EXPORT bool FlutterDesktopUnregisterExternalTexture(
-    FlutterDesktopTextureRegistrarRef texture_registrar,
-    int64_t texture_id);
-
-// Unregister an existing texture from the flutter engine for a |texture_id|.
-FLUTTER_EXPORT bool FlutterDesktopUnregisterExternalTextureRenderer(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     int64_t texture_id);
 

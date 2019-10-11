@@ -176,44 +176,6 @@ class TextureRegistrarImpl : public TextureRegistrar {
   FlutterDesktopTextureRegistrarRef texture_registrar_ref_;
 };
 
-// Wrapper around a FlutterDesktopTextureRegistrarRef that implements the
-// TextureRegistrar API.
-class TextureRendererRegistrarImpl : public TextureRendererRegistrar {
- public:
-  explicit TextureRendererRegistrarImpl(
-      FlutterDesktopTextureRegistrarRef texture_registrar_ref)
-      : texture_registrar_ref_(texture_registrar_ref) {}
-
-  virtual ~TextureRendererRegistrarImpl() = default;
-
-  // Prevent copying.
-  TextureRendererRegistrarImpl(TextureRendererRegistrarImpl const&) = delete;
-  TextureRendererRegistrarImpl& operator=(TextureRendererRegistrarImpl const&) = delete;
-
-  virtual int64_t RegisterTextureRenderer(TextureRenderer* texture_renderer) override {
-    FlutterTexutreRendererCallback callback =
-        [](size_t width, size_t height, unsigned int texture_id, void* user_data) {
-          ((TextureRenderer*)user_data)->renderToTexture(width, height, texture_id);
-    };
-    int64_t texture_id = FlutterDesktopRegisterExternalTextureRenderer(
-        texture_registrar_ref_, callback, texture_renderer);
-    return texture_id;
-  }
-  
-  virtual void MarkTextureFrameAvailable(int64_t texture_id) override {
-    FlutterDesktopMarkExternalTextureFrameAvailable(texture_registrar_ref_,
-                                                    texture_id);
-  }
-
-  virtual void UnregisterTextureRenderer(int64_t texture_id) override {
-    FlutterDesktopUnregisterExternalTextureRenderer(texture_registrar_ref_, texture_id);
-  }
-
- private:
-  // Handle for interacting with the C API.
-  FlutterDesktopTextureRegistrarRef texture_registrar_ref_;
-};
-
 // PluginRegistrar:
 
 PluginRegistrar::PluginRegistrar(FlutterDesktopPluginRegistrarRef registrar)
