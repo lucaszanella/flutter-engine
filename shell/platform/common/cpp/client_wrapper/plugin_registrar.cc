@@ -153,12 +153,24 @@ class TextureRegistrarImpl : public TextureRegistrar {
   TextureRegistrarImpl& operator=(TextureRegistrarImpl const&) = delete;
 
   virtual int64_t RegisterTexture(Texture* texture) override {
-    FlutterTexutreCallback callback =
-        [](size_t width, size_t height, void* user_data) -> const PixelBuffer* {
-      return ((Texture*)user_data)->CopyPixelBuffer(width, height);
-    };
-    int64_t texture_id = FlutterDesktopRegisterExternalTexture(
-        texture_registrar_ref_, callback, texture);
+    int64_t texture_id = 0;
+    if (texture->renderType == Texture::CopyPixelBuffer) {
+      FlutterTexutreCallback callback =
+          [](size_t width, size_t height,
+             void* user_data) -> const PixelBuffer* {
+        return ((Texture*)user_data)->CopyPixelBuffer(width, height);
+      };
+      int64_t texture_id = FlutterDesktopRegisterExternalTexture(
+          texture_registrar_ref_, callback, texture);
+    } else if (texture->renderType == Texture::RenderToTexture) {
+      FlutterTexutreRendererCallback callback =
+          [](size_t width, size_t height, int64_t texture_id
+             void* user_data)  {
+        ((Texture*)user_data)->RenderToTexture(width, height, texture_id);
+      };
+      int64_t texture_id = FlutterDesktopRegisterExternalTexture(
+          texture_registrar_ref_, callback, texture);
+    }
     return texture_id;
   }
 

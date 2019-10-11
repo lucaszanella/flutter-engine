@@ -23,6 +23,13 @@ ExternalTextureGL::ExternalTextureGL(FlutterTexutreCallback texture_callback,
       texture_callback_(texture_callback),
       user_data_(user_data) {}
 
+ExternalTextureGL::ExternalTextureGL(
+    FlutterTexutreRendererCallback texture_callback,
+    void* user_data)
+    : state_(new ExternalTextureGLState()),
+      texture_renderer_callback_(texture_renderer_callback),
+      user_data_(user_data) {}
+
 ExternalTextureGL::~ExternalTextureGL() {
   if (state_->gl_texture != 0)
     glDeleteTextures(1, &state_->gl_texture);
@@ -45,12 +52,6 @@ bool ExternalTextureGL::PopulateTextureWithIdentifier(
   if (!state_->window)
     return false;
 
-  const PixelBuffer* pixel_buffer =
-      texture_callback_(width, height, user_data_);
-
-  if (!pixel_buffer || !pixel_buffer->buffer)
-    return false;
-
   if (state_->gl_texture == 0) {
     glGenTextures(1, &state_->gl_texture);
     glBindTexture(GL_TEXTURE_2D, state_->gl_texture);
@@ -61,12 +62,21 @@ bool ExternalTextureGL::PopulateTextureWithIdentifier(
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   }
+  if (texture_callback) {
+    const PixelBuffer* pixel_buffer =
+        texture_callback_(width, height, user_data_);
 
-  glBindTexture(GL_TEXTURE_2D, state_->gl_texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pixel_buffer->width,
-               pixel_buffer->height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-               pixel_buffer->buffer);
+    if (!pixel_buffer || !pixel_buffer->buffer)
+      return false;
 
+    glBindTexture(GL_TEXTURE_2D, state_->gl_texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pixel_buffer->width,
+                 pixel_buffer->height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixel_buffer->buffer);
+  } else if (texture_renderer_callback) {
+    glBindTexture(GL_TEXTURE_2D, state_->gl_texture);
+    texture_callback_(width, height, state_->gl_texture, user_data_);
+  }
   opengl_texture->target = GL_TEXTURE_2D;
   opengl_texture->name = state_->gl_texture;
   opengl_texture->format = GL_RGBA8;

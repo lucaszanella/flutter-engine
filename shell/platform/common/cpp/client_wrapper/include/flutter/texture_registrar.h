@@ -16,11 +16,18 @@ namespace flutter {
 class Texture {
  public:
   virtual ~Texture() {}
+  enum RenderType{
+    CopyPixelBuffer,
+    RenderToTexture
+  };
+  RenderType renderType;
   // This is in response to the texture copy request interface, providing the
   // |height| and |width| parameters of bounds.
   // In some cases, we need to scale the texture to the bounds size to reduce
   // memory usage.
-  virtual const PixelBuffer* CopyPixelBuffer(size_t width, size_t height) = 0;
+  virtual const PixelBuffer* CopyPixelBuffer(size_t width, size_t height) {};
+  virtual void RenderToTexture(size_t width, size_t height, int64_t texture_id) {};
+
 };
 
 class TextureRegistrar {
