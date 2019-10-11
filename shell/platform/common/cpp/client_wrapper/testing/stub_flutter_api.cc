@@ -35,7 +35,7 @@ ScopedStubFlutterApi::~ScopedStubFlutterApi() {
 
 }  // namespace testing
 }  // namespace flutter
-
+  
 // Forwarding dummy implementations of the C API.
 
 FlutterDesktopMessengerRef FlutterDesktopRegistrarGetMessenger(
