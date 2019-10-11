@@ -56,11 +56,20 @@ int64_t FlutterDesktopRegisterExternalTexture(
   return -1;
 }
 
+int64_t FlutterDesktopRegisterExternalTextureRenderer(
+    FlutterDesktopTextureRegistrarRef texture_registrar,
+    FlutterTexutreRendererCallback texture_renderer_callback,
+    void* user_data) {
+  return -1;
+}
+
 bool FlutterDesktopUnregisterExternalTexture(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     int64_t texture_id) {
   return false;
 }
+
+
 
 bool FlutterDesktopMarkExternalTextureFrameAvailable(
     FlutterDesktopTextureRegistrarRef texture_registrar,
